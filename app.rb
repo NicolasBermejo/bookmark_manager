@@ -28,5 +28,10 @@ enable :method_override
     redirect '/bookmarks'
   end
 
+  patch '/bookmarks_update/:id' do
+    Bookmarks.update(id: params[:id], title: params[:title], url: params[:url])
+    redirect '/bookmarks'
+  end
+
   run! if app_file == $0
 end
