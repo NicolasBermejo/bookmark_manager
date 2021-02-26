@@ -1,13 +1,13 @@
-describe '.all' do
-  it 'returns a list of bookmarks' do
-    connection = PG.connect(dbname: 'Bookmark_manager_test')
-        connection.exec("INSERT INTO bookmarks VALUES(4, 'https://www.makersacademy.com');")
-        connection.exec("INSERT INTO bookmarks VALUES(5, 'https://www.destroyallsoftware.com');")
-        connection.exec("INSERT INTO bookmarks VALUES(6, 'https://www.google.com');")
-    bookmarks = Bookmarks.all
+require 'database_helpers'
 
-    expect(bookmarks).to include "https://www.makersacademy.com"
-    expect(bookmarks).to include "https://www.destroyallsoftware.com"
-    expect(bookmarks).to include "https://www.google.com"
+describe '.create' do
+  it 'creates a new bookmark' do
+    bookmark = Bookmarks.create(url: 'http://www.testbookmark.com', title: 'Test Bookmark')
+    persisted_data = PG.connect(dbname: 'Bookmark_manager_test').query("SELECT * FROM bookmarks WHERE id = #{bookmark.id};")
+
+    expect(bookmark).to be_a Bookmarks
+    expect(bookmark.id).to eq persisted_data.first['id']
+    expect(bookmark.title).to eq 'Test Bookmark'
+    expect(bookmark.url).to eq 'http://www.testbookmark.com'
   end
 end

@@ -1,15 +1,13 @@
-feature 'Viewing Bookmarks' do
-  scenario 'User viewing the bookmarks' do
-    connection = PG.connect(dbname: 'Bookmark_manager_test')
+feature 'Viewing bookmarks' do
+  scenario 'A user can see bookmarks' do
+    Bookmarks.create(url: 'https://www.makersacademy.com', title: 'Makers Academy')
+    Bookmarks.create(url: 'https://www.destroyallsoftware.com', title: 'Destroy All Software')
+    Bookmarks.create(url: 'https://www.google.com', title: 'Google')
 
-    connection.exec("INSERT INTO bookmarks VALUES(1, 'https://www.makersacademy.com');")
-    connection.exec("INSERT INTO bookmarks VALUES(2, 'https://www.destroyallsoftware.com');")
-    connection.exec("INSERT INTO bookmarks VALUES(3, 'https://www.google.com');")
+    visit '/bookmarks'
 
-    visit('/bookmarks')
-
-    expect(page).to have_content "https://www.makersacademy.com"
-    expect(page).to have_content "https://www.destroyallsoftware.com"
-    expect(page).to have_content "https://www.google.com"
+    expect(page).to have_link('Makers Academy', href: 'https://www.makersacademy.com')
+    expect(page).to have_link('Destroy All Software',  href: 'https://www.destroyallsoftware.com')
+    expect(page).to have_link('Google', href: 'https://www.google.com')
+    end
   end
-end
